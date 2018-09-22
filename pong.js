@@ -10,6 +10,7 @@ let gameDifficulty = 1;
 let freezeGame = false;
 let hitCounter = 0;
 let frameCounter = 0;
+let playerSpeed = 3;
 let ballSpeed = 1.75;
 let ballSpeedIncrease = 1.05;
 let direction = Math.random() * (0.8 * ballSpeed) + (0.2 * ballSpeed);
@@ -137,18 +138,18 @@ function playerPositions() {
     if (!freezeGame) {
         /* Player 1 position. */
         if (player1.up) {
-            player1.y -= 2;
+            player1.y -= playerSpeed;
         }
         if (player1.down) {
-            player1.y += 2;
+            player1.y += playerSpeed;
         }
 
         /* Player 2 position. */
         if (player2.up) {
-            player2.y -= 2;
+            player2.y -= playerSpeed;
         }
         if (player2.down) {
-            player2.y += 2;
+            player2.y += playerSpeed;
         }
     }
 
