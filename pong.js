@@ -1,11 +1,16 @@
 /* This is where we're painting the canvas like we're Rembrandt. Or rather, more like Rothko or Pollock... */
 
+/* Initial canvas variables. */
 let CANVAS_WIDTH = 480;
 let CANVAS_HEIGHT = 320;
 let canvasElement = $("<canvas width='" + CANVAS_WIDTH + 
                       "' height='" + CANVAS_HEIGHT + "'></canvas>");
 let canvas;
+let gameDifficulty = 1;
+let freezeGame = false;
+let frameCounter = 0;
 
+/* Main method that appends the canvas to the HTML and keeps tracks of timing. */
 $(document).ready(function() {
     canvas = canvasElement.get(0).getContext("2d");
     canvasElement.appendTo('body');
@@ -17,6 +22,7 @@ $(document).ready(function() {
     }, 1000/FPS);
 });
 
+/* Builds player 1. */
 let player1 = {
     color: "#00A",
     x: 0,
@@ -31,6 +37,7 @@ let player1 = {
     }
 };
 
+/* Builds player 2. */
 let player2 = {
     color: "#00A",
     x: CANVAS_WIDTH - 12,
@@ -45,6 +52,7 @@ let player2 = {
     }
 };
 
+/* Builds the ball element. */
 let ball = {
     color: "#333",
     x: CANVAS_WIDTH / 2,
@@ -54,64 +62,80 @@ let ball = {
     /* Give the ball a random initial direction and speed. */
     yDirection: 2 * (Math.random() * 2 - 1),
     xDirection: 2 * (Math.random() * 2 - 1),
+    interactive: true,
+    speed: 1,
     draw: function() {
       canvas.fillStyle = this.color;
       canvas.fillRect(this.x, this.y, this.width, this.height);
     }
 }
 
+/* Tracks when certain keys are pressed. */
 document.onkeydown = function (e) {
     switch (e.key) {
-        case 'w':
-            player2.w = true;
-            break;
-        case 's':
-            player2.s = true;
-            break;
+        /* Player 1 keys. */
         case 'ArrowUp':
             player1.arrowUp = true;
             break;
         case 'ArrowDown':
             player1.arrowDown = true;
+            break;
+
+        /* Player 2 keys. */
+        case 'w':
+            player2.w = true;
+            break;
+        case 's':
+            player2.s = true;
     }
 };
 
+/* Tracks when certain keys are let go of. */
 document.onkeyup = function (e) {
     switch (e.key) {
-        case 'w':
-            player2.w = false;
-            break;
-        case 's':
-            player2.s = false;
-            break;
+        /* Player 1 keys. */
         case 'ArrowUp':
             player1.arrowUp = false;
             break;
         case 'ArrowDown':
             player1.arrowDown = false;
+            break;
+
+        /* Player 2 keys. */
+        case 'w':
+            player2.w = false;
+            break;
+        case 's':
+            player2.s = false;
     }
 };
 
+/* Updates the position of the different elements on the field. */
 function update() {
+    frameCounter += 1;
+
     playerPositions();
     ballPosition();
 }
 
+/* Keep track of the players' positions. */
 function playerPositions() {
-    if (player1.arrowUp) {
-        player1.y -= 2;
-    }
+    if (!freezeGame) {
+        /* Player 1 position. */
+        if (player1.arrowUp) {
+            player1.y -= 2;
+        }
+        if (player1.arrowDown) {
+            player1.y += 2;
+        }
 
-    if (player1.arrowDown) {
-        player1.y += 2;
-    }
-
-    if (player2.w) {
-        player2.y -= 2;
-    }
-
-    if (player2.s) {
-        player2.y += 2;
+        /* Player 2 position. */
+        if (player2.w) {
+            player2.y -= 2;
+        }
+        if (player2.s) {
+            player2.y += 2;
+        }
     }
 
     /* Keep the players on the field. */
@@ -119,37 +143,57 @@ function playerPositions() {
     player2.y = player2.y.clamp(0, CANVAS_HEIGHT - player2.height);
 }
 
+/* Determines the ball's position on the field and how it interacts with the walls and players. */
 function ballPosition() {
+    /* Increase the ball speed after a set amount of time. */
+    if (frameCounter % (400 * gameDifficulty) == 0) {
+        ball.speed += 0.05;
+    }
+
     /* Keep the ball bouncing off the top and bottom of the field. */
     if(ball.y == 0 || ball.y == CANVAS_HEIGHT - ball.height) {
         ball.yDirection = ball.yDirection * -1;
     }
 
     /* Bounce the ball on the players. */
-    if(ball.x <= player1.width) {
-        if(ball.y >= player1.y && ball.y <= player1.y + player1.height) {
-            ball.xDirection = 1;
-        }
-    } else if (ball.x >= CANVAS_WIDTH - (ball.width + player2.width)) {
-        if(ball.y >= player2.y && ball.y <= player2.y + player2.height) {
-            ball.xDirection = -1;
+    if(!freezeGame) {
+        if(ball.x <= player1.width) {
+            if(ball.y >= player1.y && ball.y <= player1.y + player1.height) {
+                ball.xDirection = 1;
+            } else {
+                declareWinner("Player 2");
+            }
+        } else if (ball.x >= CANVAS_WIDTH - (ball.width + player2.width)) {
+            if(ball.y >= player2.y && ball.y <= player2.y + player2.height) {
+                ball.xDirection = -1;
+            } else {
+                declareWinner("Player 1");
+            }
         }
     }
 
-    // /* Determine a winner. */
-    // if(ball.x == 0 || ball.x == CANVAS_WIDTH - ball.width) {
-    //     GAME LOST!;
-    // }
-
     /* Move the ball! */
-    ball.y += ball.yDirection;
-    ball.x += ball.xDirection;
+    ball.y += ball.yDirection * ball.speed;
+    ball.x += ball.xDirection * ball.speed;
 
     /* Keep the ball on the field. */
     ball.y = ball.y.clamp(0, CANVAS_HEIGHT - ball.height);
     ball.x = ball.x.clamp(0, CANVAS_WIDTH - ball.width);
 }
 
+/* Ends the game and appends HTML elements to declare a winner. */
+function declareWinner(player) {
+    ball.xDirection = 0;
+    ball.yDirection = 0;
+    freezeGame = true;
+    let winnerDeclaration = document.createElement('h1');
+    winnerDeclaration.innerHTML = 'Congratulations to ' + player + ' on a great victory!';
+    let timePlayedDeclaration = document.createElement('p');
+    timePlayedDeclaration = ''
+    document.body.appendChild(winnerDeclaration);
+}
+
+/* Draws the playing fields, the players and the ball. */
 function draw() {
     canvas.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     canvas.fillStyle = "#FFF";
@@ -159,6 +203,7 @@ function draw() {
     ball.draw();
 }
 
+/* Keeps a value between a given minimum and maximum. */
 Number.prototype.clamp = function(min, max) {
     return Math.min(Math.max(this, min), max);
   };
