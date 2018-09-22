@@ -10,7 +10,8 @@ let gameDifficulty = 1;
 let freezeGame = false;
 let hitCounter = 0;
 let frameCounter = 0;
-let ballSpeed = 1.5;
+let ballSpeed = 1.75;
+let ballSpeedIncrease = 1.05;
 let direction = Math.random() * (0.8 * ballSpeed) + (0.2 * ballSpeed);
 let winnerDeclaration = '';
 let timePlayedDeclaration = '';
@@ -184,7 +185,7 @@ function ballPosition() {
 function detectPlayerCollision(player) {
     if(ball.y + ball.height >= player.y && ball.y <= player.y + player.height) {
         ball.xDirection = ball.xDirection * -1;
-        ballSpeed *= 1.02;
+        ballSpeed *= ballSpeedIncrease;
         hitCounter += 1;
     } else {
         declareWinner(player.opponentName);
@@ -208,10 +209,10 @@ function draw() {
     canvas.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     player1.draw();
     player2.draw();
+    ball.draw();
     canvas.fillText(hitCounter, CANVAS_WIDTH /2, 20);
     canvas.fillText(winnerDeclaration, CANVAS_WIDTH /2, CANVAS_HEIGHT / 2 - 20);
     canvas.fillText(timePlayedDeclaration, CANVAS_WIDTH /2, CANVAS_HEIGHT / 2 + 20);
-    ball.draw();
 }
 
 /* Keeps a value between a given minimum and maximum. */
