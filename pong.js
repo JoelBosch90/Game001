@@ -9,6 +9,7 @@ let canvas;
 let gameDifficulty = 1;
 let freezeGame = false;
 let frameCounter = 0;
+let direction = (Math.random() * 0.6 + 0.3) * (Math.round(Math.random()) * 2 -1);
 
 /* Main method that appends the canvas to the HTML and keeps tracks of timing. */
 $(document).ready(function() {
@@ -35,7 +36,7 @@ let player1 = {
       canvas.fillStyle = this.color;
       canvas.fillRect(this.x, this.y, this.width, this.height);
     }
-};
+}
 
 /* Builds player 2. */
 let player2 = {
@@ -50,20 +51,23 @@ let player2 = {
       canvas.fillStyle = this.color;
       canvas.fillRect(this.x, this.y, this.width, this.height);
     }
-};
+}
 
 /* Builds the ball element. */
 let ball = {
+    /* Initial ball settings. */
     color: "#333",
     x: CANVAS_WIDTH / 2,
     y: CANVAS_HEIGHT / 2,
     width: 6,
     height: 6,
+
     /* Give the ball a random initial direction and speed. */
-    yDirection: 2 * (Math.random() * 2 - 1),
-    xDirection: 2 * (Math.random() * 2 - 1),
-    interactive: true,
-    speed: 1,
+    xDirection: direction,
+    yDirection: 0 + direction,
+    speed: 3,
+
+    /* Draw the ball. */
     draw: function() {
       canvas.fillStyle = this.color;
       canvas.fillRect(this.x, this.y, this.width, this.height);
@@ -88,7 +92,7 @@ document.onkeydown = function (e) {
         case 's':
             player2.s = true;
     }
-};
+}
 
 /* Tracks when certain keys are let go of. */
 document.onkeyup = function (e) {
@@ -108,7 +112,7 @@ document.onkeyup = function (e) {
         case 's':
             player2.s = false;
     }
-};
+}
 
 /* Updates the position of the different elements on the field. */
 function update() {
@@ -209,4 +213,4 @@ function draw() {
 /* Keeps a value between a given minimum and maximum. */
 Number.prototype.clamp = function(min, max) {
     return Math.min(Math.max(this, min), max);
-  };
+}
