@@ -51,6 +51,9 @@ let ball = {
     y: CANVAS_HEIGHT / 2,
     width: 6,
     height: 6,
+    /* Give the ball a random initial direction and speed. */
+    yDirection: 2 * (Math.random() * 2 - 1),
+    xDirection: 2 * (Math.random() * 2 - 1),
     draw: function() {
       canvas.fillStyle = this.color;
       canvas.fillRect(this.x, this.y, this.width, this.height);
@@ -90,9 +93,11 @@ document.onkeyup = function (e) {
 };
 
 function update() {
-    let e;
-    e = e || window.event;
+    playerPositions();
+    ballPosition();
+}
 
+function playerPositions() {
     if (player1.arrowUp) {
         player1.y -= 2;
     }
@@ -109,8 +114,40 @@ function update() {
         player2.y += 2;
     }
 
+    /* Keep the players on the field. */
     player1.y = player1.y.clamp(0, CANVAS_HEIGHT - player1.height);
-    player2.y = player2.y.clamp(0, CANVAS_HEIGHT - player1.height);
+    player2.y = player2.y.clamp(0, CANVAS_HEIGHT - player2.height);
+}
+
+function ballPosition() {
+    /* Keep the ball bouncing off the top and bottom of the field. */
+    if(ball.y == 0 || ball.y == CANVAS_HEIGHT - ball.height) {
+        ball.yDirection = ball.yDirection * -1;
+    }
+
+    /* Bounce the ball on the players. */
+    if(ball.x <= player1.width) {
+        if(ball.y >= player1.y && ball.y <= player1.y + player1.height) {
+            ball.xDirection = 1;
+        }
+    } else if (ball.x >= CANVAS_WIDTH - (ball.width + player2.width)) {
+        if(ball.y >= player2.y && ball.y <= player2.y + player2.height) {
+            ball.xDirection = -1;
+        }
+    }
+
+    // /* Determine a winner. */
+    // if(ball.x == 0 || ball.x == CANVAS_WIDTH - ball.width) {
+    //     GAME LOST!;
+    // }
+
+    /* Move the ball! */
+    ball.y += ball.yDirection;
+    ball.x += ball.xDirection;
+
+    /* Keep the ball on the field. */
+    ball.y = ball.y.clamp(0, CANVAS_HEIGHT - ball.height);
+    ball.x = ball.x.clamp(0, CANVAS_WIDTH - ball.width);
 }
 
 function draw() {
