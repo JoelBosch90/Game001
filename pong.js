@@ -32,7 +32,7 @@ $(document).ready(function() {
 
 /* Builds player 1. */
 let player1 = {
-    opponentName: "Player 2",
+    name: "Player 1",
     color: "#00A",
     x: 0,
     y: CANVAS_HEIGHT / 2,
@@ -48,7 +48,7 @@ let player1 = {
 
 /* Builds player 2. */
 let player2 = {
-    opponentName: "Player 1",
+    name: "Player 2",
     color: "#00A",
     x: CANVAS_WIDTH - 8,
     y: CANVAS_HEIGHT / 2,
@@ -167,9 +167,9 @@ function ballPosition() {
     /* Bounce the ball on the players. */
     if(!freezeGame) {
         if(ball.x <= player1.width) {
-            detectPlayerCollision(player1);
+            detectPlayerCollision(player1, player2.name);
         } else if (ball.x >= CANVAS_WIDTH - (ball.width + player2.width)) {
-            detectPlayerCollision(player2);
+            detectPlayerCollision(player2, player1.name);
         }
     }
 
@@ -182,13 +182,13 @@ function ballPosition() {
     ball.x = ball.x.clamp(0, CANVAS_WIDTH - ball.width);
 }
 
-function detectPlayerCollision(player) {
+function detectPlayerCollision(player, opponentName) {
     if(ball.y + ball.height >= player.y && ball.y <= player.y + player.height) {
         ball.xDirection = ball.xDirection * -1;
         ballSpeed *= ballSpeedIncrease;
         hitCounter += 1;
     } else {
-        declareWinner(player.opponentName);
+        declareWinner(opponentName);
     }
 }
 
