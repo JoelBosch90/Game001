@@ -10,8 +10,8 @@ let gameDifficulty = 1;
 let freezeGame = false;
 let hitCounter = 0;
 let frameCounter = 0;
-let ballSpeed = 1.3;
-let direction = Math.random() * (0.85 * ballSpeed) + (0.15 * ballSpeed);
+let ballSpeed = 1.5;
+let direction = Math.random() * (0.8 * ballSpeed) + (0.2 * ballSpeed);
 let winnerDeclaration = '';
 let timePlayedDeclaration = '';
 
@@ -35,8 +35,8 @@ let player1 = {
     color: "#00A",
     x: 0,
     y: CANVAS_HEIGHT / 2,
-    width: 12,
-    height: 32,
+    width: 8,
+    height: 40,
     down: false,
     up: false,
     draw: function() {
@@ -49,10 +49,10 @@ let player1 = {
 let player2 = {
     opponentName: "Player 1",
     color: "#00A",
-    x: CANVAS_WIDTH - 12,
+    x: CANVAS_WIDTH - 8,
     y: CANVAS_HEIGHT / 2,
-    width: 12,
-    height: 32,
+    width: 8,
+    height: 40,
     down: false,
     up: false,
     draw: function() {
