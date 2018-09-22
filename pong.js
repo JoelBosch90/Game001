@@ -30,7 +30,7 @@ $(document).ready(function() {
 });
 
 class player {
-    constructor(name, x) {
+    constructor(name, x, upKey, downKey) {
         this.name = name;
         this.color = "#00A";
         this.x = x;
@@ -39,6 +39,8 @@ class player {
         this.height = 40;
         this.downKeyPressed = false;
         this.upKeyPressed = false;
+        this.downKey = downKey;
+        this.upKey = upKey;
     }
     
     draw() {
@@ -48,10 +50,10 @@ class player {
 }
 
 /* Builds player 1. */
-let player1 = new player("Player 1", 0);
+let player1 = new player("Player 1", 0, "w", "s");
 
 /* Builds player 2. */
-let player2 = new player("Player 2", CANVAS_WIDTH - 8);
+let player2 = new player("Player 2", CANVAS_WIDTH - 8, "ArrowUp", "ArrowDown");
 
 /* Builds the ball element. */
 let ball = {
@@ -75,30 +77,23 @@ let ball = {
 
 /* Tracks when certain keys are pressed. */
 document.onkeydown = function (e) {
-    setKeyPress(e.key, true);
+    setKeyPress(player1, e.key, true);
+    setKeyPress(player2, e.key, true);
 }
 
 /* Tracks when certain keys are let go of. */
 document.onkeyup = function (e) {
-    setKeyPress(e.key, false);
+    setKeyPress(player1, e.key, false);
+    setKeyPress(player2, e.key, false);
 }
 
-function setKeyPress(key, pressed) {
+function setKeyPress(player, key, pressed) {
     switch (key) {
-        /* Player 1 keys. */
-        case 'w':
-            player1.upKeyPressed = pressed;
+        case player.upKey:
+            player.upKeyPressed = pressed;
             break;
-        case 's':
-            player1.downKeyPressed = pressed;
-            break;
-
-        /* Player 2 keys. */
-        case 'ArrowUp':
-            player2.upKeyPressed = pressed;
-            break;
-        case 'ArrowDown':
-            player2.downKeyPressed = pressed;
+        case player.downKey:
+            player.downKeyPressed = pressed;
             break;
     }
 }
