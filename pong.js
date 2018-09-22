@@ -10,7 +10,8 @@ let gameDifficulty = 1;
 let freezeGame = false;
 let hitCounter = 0;
 let frameCounter = 0;
-let direction = (Math.random() * 0.6 + 0.3) * (Math.round(Math.random()) * 2 -1);
+let ballSpeed = 1.3;
+let direction = Math.random() * (0.85 * ballSpeed) + (0.15 * ballSpeed);
 let winnerDeclaration = '';
 let timePlayedDeclaration = '';
 
@@ -30,7 +31,7 @@ $(document).ready(function() {
 
 /* Builds player 1. */
 let player1 = {
-    name: "Player 1",
+    opponentName: "Player 2",
     color: "#00A",
     x: 0,
     y: CANVAS_HEIGHT / 2,
@@ -46,7 +47,7 @@ let player1 = {
 
 /* Builds player 2. */
 let player2 = {
-    name: "Player 2",
+    opponentName: "Player 1",
     color: "#00A",
     x: CANVAS_WIDTH - 12,
     y: CANVAS_HEIGHT / 2,
@@ -70,14 +71,13 @@ let ball = {
     height: 6,
 
     /* Give the ball a random initial direction and speed. */
-    xDirection: direction,
-    yDirection: 0 + direction,
-    speed: 2.5,
+    xDirection: Math.sqrt(direction) * (Math.round(Math.random()) * 2 -1),
+    yDirection: Math.sqrt(1 - direction) * (Math.round(Math.random()) * 2 -1),
 
     /* Draw the ball. */
     draw: function() {
-      canvas.fillStyle = this.color;
-      canvas.fillRect(this.x, this.y, this.width, this.height);
+        canvas.fillStyle = this.color;
+        canvas.fillRect(this.x, this.y, this.width, this.height);
     }
 }
 
@@ -164,15 +164,15 @@ function ballPosition() {
     /* Bounce the ball on the players. */
     if(!freezeGame) {
         if(ball.x <= player1.width) {
-            detectPlayerCollision(player2);
-        } else if (ball.x >= CANVAS_WIDTH - (ball.width + player2.width)) {
             detectPlayerCollision(player1);
+        } else if (ball.x >= CANVAS_WIDTH - (ball.width + player2.width)) {
+            detectPlayerCollision(player2);
         }
     }
 
     /* Move the ball! */
-    ball.y += ball.yDirection * ball.speed;
-    ball.x += ball.xDirection * ball.speed;
+    ball.y += ball.yDirection * ballSpeed;
+    ball.x += ball.xDirection * ballSpeed;
 
     /* Keep the ball on the field. */
     ball.y = ball.y.clamp(0, CANVAS_HEIGHT - ball.height);
@@ -180,12 +180,12 @@ function ballPosition() {
 }
 
 function detectPlayerCollision(player) {
-    if(ball.y >= player.y && ball.y + ball.height <= player.y + player.height) {
+    if(ball.y + ball.height >= player.y && ball.y <= player.y + player.height) {
         ball.xDirection = ball.xDirection * -1;
-        ball.speed *= 1.02;
+        ballSpeed *= 1.02;
         hitCounter += 1;
     } else {
-        declareWinner(player.name);
+        declareWinner(player.opponentName);
     }
 }
 
