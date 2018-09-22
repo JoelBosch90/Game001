@@ -8,14 +8,12 @@ let canvasElement = $("<canvas width='" + CANVAS_WIDTH +
 let canvas;
 let gameDifficulty = 1;
 let freezeGame = false;
-let hitCounter = 0;
-let frameCounter = 0;
+let hitCounter = frameCounter = 0;
 let playerSpeed = 3;
 let ballSpeed = 1.75;
 let ballSpeedIncrease = 1.05;
 let direction = Math.random() * (0.8 * ballSpeed) + (0.2 * ballSpeed);
-let winnerDeclaration = '';
-let timePlayedDeclaration = '';
+let winnerDeclaration = timePlayedDeclaration = '';
 
 /* Main method that appends the canvas to the HTML and keeps tracks of timing. */
 $(document).ready(function() {
@@ -39,8 +37,8 @@ let player1 = {
     y: CANVAS_HEIGHT / 2,
     width: 8,
     height: 40,
-    down: false,
-    up: false,
+    downKeyPressed: false,
+    upKeyPressed: false,
     draw: function() {
       canvas.fillStyle = this.color;
       canvas.fillRect(this.x, this.y, this.width, this.height);
@@ -55,8 +53,8 @@ let player2 = {
     y: CANVAS_HEIGHT / 2,
     width: 8,
     height: 40,
-    down: false,
-    up: false,
+    downKeyPressed: false,
+    upKeyPressed: false,
     draw: function() {
       canvas.fillStyle = this.color;
       canvas.fillRect(this.x, this.y, this.width, this.height);
@@ -85,42 +83,30 @@ let ball = {
 
 /* Tracks when certain keys are pressed. */
 document.onkeydown = function (e) {
-    switch (e.key) {
-        /* Player 1 keys. */
-        case 'w':
-            player1.up = true;
-            break;
-        case 's':
-            player1.down = true;
-            break;
-
-        /* Player 2 keys. */
-        case 'ArrowUp':
-            player2.up = true;
-            break;
-        case 'ArrowDown':
-            player2.down = true;
-            break;
-    }
+    setKeyPress(e.key, true);
 }
 
 /* Tracks when certain keys are let go of. */
 document.onkeyup = function (e) {
-    switch (e.key) {
+    setKeyPress(e.key, false);
+}
+
+function setKeyPress(key, pressed) {
+    switch (key) {
         /* Player 1 keys. */
         case 'w':
-            player1.up = false;
+            player1.upKeyPressed = pressed;
             break;
         case 's':
-            player1.down = false;
+            player1.downKeyPressed = pressed;
             break;
 
         /* Player 2 keys. */
         case 'ArrowUp':
-            player2.up = false;
+            player2.upKeyPressed = pressed;
             break;
         case 'ArrowDown':
-            player2.down = false;
+            player2.downKeyPressed = pressed;
             break;
     }
 }
@@ -137,25 +123,24 @@ function update() {
 function playerPositions() {
     if (!freezeGame) {
         /* Player 1 position. */
-        if (player1.up) {
-            player1.y -= playerSpeed;
-        }
-        if (player1.down) {
-            player1.y += playerSpeed;
-        }
-
+        setPlayerSpeedByKeyPressed(player1);
+        
         /* Player 2 position. */
-        if (player2.up) {
-            player2.y -= playerSpeed;
-        }
-        if (player2.down) {
-            player2.y += playerSpeed;
-        }
+        setPlayerSpeedByKeyPressed(player2);
     }
 
     /* Keep the players on the field. */
     player1.y = player1.y.clamp(0, CANVAS_HEIGHT - player1.height);
     player2.y = player2.y.clamp(0, CANVAS_HEIGHT - player2.height);
+}
+
+function setPlayerSpeedByKeyPressed(player) {
+    if (player.upKeyPressed) {
+        player.y -= playerSpeed;
+    }
+    if (player.downKeyPressed) {
+        player.y += playerSpeed;
+    } 
 }
 
 /* Determines the ball's position on the field and how it interacts with the walls and players. */
@@ -195,8 +180,7 @@ function detectPlayerCollision(player, opponentName) {
 
 /* Ends the game and appends HTML elements to declare a winner. */
 function declareWinner(player) {
-    ball.xDirection = 0;
-    ball.yDirection = 0;
+    ball.xDirection = ball.yDirection = 0;
     freezeGame = true;
 
     winnerDeclaration = 'Congratulations to ' + player + ' on a great victory!';
