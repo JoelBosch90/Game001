@@ -11,6 +11,8 @@ let freezeGame = false;
 let hitCounter = 0;
 let frameCounter = 0;
 let direction = (Math.random() * 0.6 + 0.3) * (Math.round(Math.random()) * 2 -1);
+let winnerDeclaration = '';
+let timePlayedDeclaration = '';
 
 /* Main method that appends the canvas to the HTML and keeps tracks of timing. */
 $(document).ready(function() {
@@ -162,9 +164,9 @@ function ballPosition() {
     /* Bounce the ball on the players. */
     if(!freezeGame) {
         if(ball.x <= player1.width) {
-            detectPlayerCollision(player1);
-        } else if (ball.x >= CANVAS_WIDTH - (ball.width + player2.width)) {
             detectPlayerCollision(player2);
+        } else if (ball.x >= CANVAS_WIDTH - (ball.width + player2.width)) {
+            detectPlayerCollision(player1);
         }
     }
 
@@ -178,7 +180,7 @@ function ballPosition() {
 }
 
 function detectPlayerCollision(player) {
-    if(ball.y >= player.y && ball.y <= player.y + player.height) {
+    if(ball.y >= player.y && ball.y + ball.height <= player.y + player.height) {
         ball.xDirection = ball.xDirection * -1;
         ball.speed *= 1.02;
         hitCounter += 1;
@@ -193,14 +195,8 @@ function declareWinner(player) {
     ball.yDirection = 0;
     freezeGame = true;
 
-    let winnerDeclaration = document.createElement('h1');
-    let timePlayedDeclaration = document.createElement('p');
-
-    winnerDeclaration.innerHTML = 'Congratulations to ' + player + ' on a great victory!';
-    timePlayedDeclaration.innerHTML = 'Time played: ' + Math.round(frameCounter / 60) + ' seconds.';
-
-    document.body.appendChild(winnerDeclaration);
-    document.body.appendChild(timePlayedDeclaration);
+    winnerDeclaration = 'Congratulations to ' + player + ' on a great victory!';
+    timePlayedDeclaration = 'Time played: ' + Math.round(frameCounter / 60) + ' seconds.';
 }
 
 /* Draws the playing fields, the players and the ball. */
@@ -211,6 +207,8 @@ function draw() {
     player1.draw();
     player2.draw();
     canvas.fillText(hitCounter, CANVAS_WIDTH /2, 20);
+    canvas.fillText(winnerDeclaration, CANVAS_WIDTH /2, CANVAS_HEIGHT / 2 - 20);
+    canvas.fillText(timePlayedDeclaration, CANVAS_WIDTH /2, CANVAS_HEIGHT / 2 + 20);
     ball.draw();
 }
 
