@@ -16,6 +16,8 @@ let direction = (Math.random() * 0.6 + 0.3) * (Math.round(Math.random()) * 2 -1)
 $(document).ready(function() {
     canvas = canvasElement.get(0).getContext("2d");
     canvasElement.appendTo('body');
+    canvas.font = "22px Arial";
+    canvas.textAlign = "center";
 
     let FPS = 60;
     setInterval(function() {
@@ -179,6 +181,7 @@ function detectPlayerCollision(player) {
     if(ball.y >= player.y && ball.y <= player.y + player.height) {
         ball.xDirection = ball.xDirection * -1;
         ball.speed *= 1.02;
+        hitCounter += 1;
     } else {
         declareWinner(player.name);
     }
@@ -207,6 +210,7 @@ function draw() {
     canvas.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     player1.draw();
     player2.draw();
+    canvas.fillText(hitCounter, CANVAS_WIDTH /2, 20);
     ball.draw();
 }
 
