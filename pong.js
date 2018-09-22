@@ -195,9 +195,10 @@ function declareWinner(player) {
     let timePlayedDeclaration = document.createElement('p');
 
     winnerDeclaration.innerHTML = 'Congratulations to ' + player + ' on a great victory!';
-    timePlayedDeclaration = 'Time played: ' + frameCounter / 60 + ' seconds.';
+    timePlayedDeclaration.innerHTML = 'Time played: ' + Math.round(frameCounter / 60) + ' seconds.';
 
     document.body.appendChild(winnerDeclaration);
+    document.body.appendChild(timePlayedDeclaration);
 }
 
 /* Draws the playing fields, the players and the ball. */
