@@ -2,7 +2,7 @@
 
 $(document).ready(function() {
 
-let canvas = $("#Game001");
+let canvas = document.getElementById("Game001");
 let context = canvas.getContext("2D");
 context.fillRect(0, 0, canvas.width, canvas.height);
 context.beginPath();
