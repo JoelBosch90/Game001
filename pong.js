@@ -147,7 +147,7 @@ function playerPositions() {
 function ballPosition() {
     /* Increase the ball speed after a set amount of time. */
     if (frameCounter % (400 * gameDifficulty) == 0) {
-        ball.speed += 0.05;
+        ball.speed *= 1.05;
     }
 
     /* Keep the ball bouncing off the top and bottom of the field. */
@@ -186,10 +186,13 @@ function declareWinner(player) {
     ball.xDirection = 0;
     ball.yDirection = 0;
     freezeGame = true;
+
     let winnerDeclaration = document.createElement('h1');
-    winnerDeclaration.innerHTML = 'Congratulations to ' + player + ' on a great victory!';
     let timePlayedDeclaration = document.createElement('p');
-    timePlayedDeclaration = ''
+
+    winnerDeclaration.innerHTML = 'Congratulations to ' + player + ' on a great victory!';
+    timePlayedDeclaration = 'Time played: ' + frameCounter / 60 + ' seconds.';
+
     document.body.appendChild(winnerDeclaration);
 }
 
