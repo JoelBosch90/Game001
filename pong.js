@@ -73,7 +73,7 @@ let ball = {
 
     /* Give the ball a random initial direction and speed. */
     xDirection: Math.sqrt(direction) * (Math.round(Math.random()) * 2 -1),
-    yDirection: Math.sqrt(1 - direction) * (Math.round(Math.random()) * 2 -1),
+    yDirection: Math.sqrt(ballSpeed - direction) * (Math.round(Math.random()) * 2 -1),
 
     /* Draw the ball. */
     draw: function() {
