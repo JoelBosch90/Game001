@@ -2,10 +2,11 @@
 
 $(document).ready(function() {
 
-let canvas = document.getElementById("Game001");
-let context = canvas.getContext("2D");
+    let canvas = document.getElementById("Game001");
+    let context = canvas.getContext("2D");
 
-context.moveTo(0, 0);
-context.lineTo(250, 500);
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.moveTo(0, 0);
+    context.lineTo(250, 500);
 
 });
