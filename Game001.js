@@ -7,4 +7,6 @@ $(document).ready(function() {
     context.beginPath();
     context.moveTo(0, 0);
     context.lineTo(250, 500);
+    context.strokeStyle = "red";
+    context.stroke();
 });
