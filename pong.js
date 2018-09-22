@@ -49,37 +49,9 @@ class player {
 
 /* Builds player 1. */
 let player1 = new player("Player 1", 0);
-// let player1 = {
-//     name: "Player 1",
-//     color: "#00A",
-//     x: 0,
-//     y: CANVAS_HEIGHT / 2,
-//     width: 8,
-//     height: 40,
-//     downKeyPressed: false,
-//     upKeyPressed: false,
-//     draw: function() {
-//       canvas.fillStyle = this.color;
-//       canvas.fillRect(this.x, this.y, this.width, this.height);
-//     }
-// }
 
 /* Builds player 2. */
 let player2 = new player("Player 2", CANVAS_WIDTH - 8);
-// let player2 = {
-//     name: "Player 2",
-//     color: "#00A",
-//     x: CANVAS_WIDTH - 8,
-//     y: CANVAS_HEIGHT / 2,
-//     width: 8,
-//     height: 40,
-//     downKeyPressed: false,
-//     upKeyPressed: false,
-//     draw: function() {
-//       canvas.fillStyle = this.color;
-//       canvas.fillRect(this.x, this.y, this.width, this.height);
-//     }
-// }
 
 /* Builds the ball element. */
 let ball = {
