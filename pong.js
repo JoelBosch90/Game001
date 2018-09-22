@@ -37,8 +37,8 @@ let player1 = {
     y: CANVAS_HEIGHT / 2,
     width: 12,
     height: 32,
-    arrowDown: false,
-    arrowUp: false,
+    down: false,
+    up: false,
     draw: function() {
       canvas.fillStyle = this.color;
       canvas.fillRect(this.x, this.y, this.width, this.height);
@@ -53,8 +53,8 @@ let player2 = {
     y: CANVAS_HEIGHT / 2,
     width: 12,
     height: 32,
-    w: false,
-    s: false,
+    down: false,
+    up: false,
     draw: function() {
       canvas.fillStyle = this.color;
       canvas.fillRect(this.x, this.y, this.width, this.height);
@@ -85,19 +85,20 @@ let ball = {
 document.onkeydown = function (e) {
     switch (e.key) {
         /* Player 1 keys. */
-        case 'ArrowUp':
-            player1.arrowUp = true;
+        case 'w':
+            player1.up = true;
             break;
-        case 'ArrowDown':
-            player1.arrowDown = true;
+        case 's':
+            player1.down = true;
             break;
 
         /* Player 2 keys. */
-        case 'w':
-            player2.w = true;
+        case 'ArrowUp':
+            player2.up = true;
             break;
-        case 's':
-            player2.s = true;
+        case 'ArrowDown':
+            player2.down = true;
+            break;
     }
 }
 
@@ -105,19 +106,20 @@ document.onkeydown = function (e) {
 document.onkeyup = function (e) {
     switch (e.key) {
         /* Player 1 keys. */
-        case 'ArrowUp':
-            player1.arrowUp = false;
+        case 'w':
+            player1.up = false;
             break;
-        case 'ArrowDown':
-            player1.arrowDown = false;
+        case 's':
+            player1.down = false;
             break;
 
         /* Player 2 keys. */
-        case 'w':
-            player2.w = false;
+        case 'ArrowUp':
+            player2.up = false;
             break;
-        case 's':
-            player2.s = false;
+        case 'ArrowDown':
+            player2.down = false;
+            break;
     }
 }
 
@@ -133,18 +135,18 @@ function update() {
 function playerPositions() {
     if (!freezeGame) {
         /* Player 1 position. */
-        if (player1.arrowUp) {
+        if (player1.up) {
             player1.y -= 2;
         }
-        if (player1.arrowDown) {
+        if (player1.down) {
             player1.y += 2;
         }
 
         /* Player 2 position. */
-        if (player2.w) {
+        if (player2.up) {
             player2.y -= 2;
         }
-        if (player2.s) {
+        if (player2.down) {
             player2.y += 2;
         }
     }
