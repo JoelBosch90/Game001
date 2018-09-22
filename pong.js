@@ -184,7 +184,7 @@ function ballPosition() {
 
 function detectPlayerCollision(player, opponentName) {
     if(ball.y + ball.height >= player.y && ball.y <= player.y + player.height) {
-        ball.xDirection = ball.xDirection * -1;
+        ball.xDirection *= -1;
         ballSpeed *= ballSpeedIncrease;
         hitCounter += 1;
     } else {
@@ -204,12 +204,17 @@ function declareWinner(player) {
 
 /* Draws the playing fields, the players and the ball. */
 function draw() {
+    /* Draw the empty canvas. */
     canvas.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     canvas.fillStyle = "#FFF";
     canvas.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    /* Draw the play elements. */
     player1.draw();
     player2.draw();
     ball.draw();
+
+    /* Draw text elements. */
     canvas.fillText(hitCounter, CANVAS_WIDTH /2, 20);
     canvas.fillText(winnerDeclaration, CANVAS_WIDTH /2, CANVAS_HEIGHT / 2 - 20);
     canvas.fillText(timePlayedDeclaration, CANVAS_WIDTH /2, CANVAS_HEIGHT / 2 + 20);
