@@ -163,13 +163,13 @@ function ballPosition() {
     if(!freezeGame) {
         if(ball.x <= player1.width) {
             if(ball.y >= player1.y && ball.y <= player1.y + player1.height) {
-                ball.xDirection = 1;
+                ball.xDirection = ball.xDirection * 1;
             } else {
                 declareWinner("Player 2");
             }
         } else if (ball.x >= CANVAS_WIDTH - (ball.width + player2.width)) {
             if(ball.y >= player2.y && ball.y <= player2.y + player2.height) {
-                ball.xDirection = -1;
+                ball.xDirection = ball.xDirection *-1;
             } else {
                 declareWinner("Player 1");
             }
