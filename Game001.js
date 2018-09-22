@@ -3,8 +3,9 @@
 $(document).ready(function() {
 
 let canvas = document.getElementById("Game001");
-let context = canvas.msGetInputContext("2D");
+let context = canvas.getContext("2D");
 
 context.moveTo(0, 0);
 context.lineTo(250, 500);
+
 });
