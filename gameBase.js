@@ -37,7 +37,7 @@ class GameBase {
     }
 
     _update() {
-        if(this.viewPort != null){
+        if(this.viewPort != null) { /* Als er een viewport wordt gebruikt de offset berekenen en alle andere objecten bewegen ipv de speler */
             let viewPortOffsetX = this.viewPort.x - (this.canvas_width / 2) + (this.viewPort.width / 2);
             let viewPortOffsetY = this.viewPort.y - (this.canvas_height / 2) + (this.viewPort.height / 2);
             
@@ -48,7 +48,7 @@ class GameBase {
                     this.viewPort.controls.move(this.controlInput, this.entities[i], this.viewPort.controls.speed - (2 * this.viewPort.controls.speed));
                 }
             }
-        } else {
+        } else { /* Spelers bewegen */
             for (var i = 0; i < this.entities.length; i++) {
                 if(this.entities[i].controls != null) {
                     this.entities[i].controls.move(this.controlInput, this.entities[i], this.entities[i].speed);
