@@ -10,6 +10,14 @@ class GameBase {
         canvasElement.appendTo('body');
     }
 
+    set viewPort(viewPort) {
+        this._viewPort = viewPort
+    }
+
+    get viewPort() {
+        return this._viewPort;
+    }
+
     start() {
         this._start(this);
     }
@@ -29,7 +37,24 @@ class GameBase {
     }
 
     _update() {
-        
+        if(this.viewPort != null){
+            let viewPortOffsetX = this.viewPort.x - (this.canvas_width / 2) + (this.viewPort.width / 2);
+            let viewPortOffsetY = this.viewPort.y - (this.canvas_height / 2) + (this.viewPort.height / 2);
+            
+            for (var i = 0; i < this.entities.length; i++) {
+                if(this.viewPort != this.entities[i]) {
+                    this.entities[i].x = this.entities[i].x + viewPortOffsetX;
+                    this.entities[i].y = this.entities[i].y + viewPortOffsetY;
+                    this.viewPort.controls.move(this.controlInput, this.entities[i], this.viewPort.controls.speed - (2 * this.viewPort.controls.speed));
+                }
+            }
+        } else {
+            for (var i = 0; i < this.entities.length; i++) {
+                if(this.entities[i].controls != null) {
+                    this.entities[i].controls.move(this.controlInput, this.entities[i], this.entities[i].speed);
+                }
+            }
+        }
     }
 
     draw() {
@@ -42,13 +67,9 @@ class GameBase {
         this.canvas.fillStyle = "#FFF";
         this.canvas.fillRect(0, 0, this.canvas_width, this.canvas_height);
         
-        var arrayLength = this.entities.length;
-        for (var i = 0; i < arrayLength; i++) {
+        for (var i = 0; i < this.entities.length; i++) {
             if(this.entities[i].draw != null) {
                 this.entities[i].draw(this.canvas);
-            }
-            if(this.entities[i].controls != null) {
-                this.entities[i].controls.move(this.controlInput, this.entities[i]);
             }
         }
     }
@@ -57,6 +78,8 @@ class GameBase {
 class Entity {
     constructor(name, x, y, width, height) {
         this.name = name;
+        this.absoluteX = x;
+        this.absoluteY = y;
         this.x = x;
         this.y = y;
         this.width = width;
@@ -94,18 +117,18 @@ class FourDirectionalPlayerControls {
         this.speed = speed;
     }
 
-    move(controlInput, player) {
+    move(controlInput, object, speed) {
         if(controlInput.IsKeyPressed(this.upKey)) {
-            player.y -= 2;
+            object.y -= speed;
         }
         if(controlInput.IsKeyPressed(this.leftKey)){
-            player.x += 2;
+            object.x += speed;
         }
         if(controlInput.IsKeyPressed(this.downKey)){
-            player.y += 2;
+            object.y += speed;
         }
         if(controlInput.IsKeyPressed(this.rightKey)){
-            player.x -= 2;
+            object.x -= speed;
         }
     }
 }

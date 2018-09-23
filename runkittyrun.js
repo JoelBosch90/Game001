@@ -12,12 +12,14 @@ class Game extends GameBase {
 
     start() {
         this._start(this);
+        this.playingField = new PlayingField(1500, 1500);
         
-        let player = new Player("Player 1", 10, 10, 20, 20, new FourDirectionalPlayerControls("w","d","s","a"));
+        let player = new Player("Player 1", 240, 190, 20, 20, new FourDirectionalPlayerControls("w","d","s","a", 2));
         player.draw = function(canvas) {
             canvas.fillStyle = "#00A";
             canvas.fillRect(this.x, this.y, this.width, this.height);
         }
+        this.viewPort = player;
         this.entities.push(player);
 
         let map = new Map(1500, 1500);
