@@ -1,7 +1,7 @@
 let game;
 
 $(document).ready(function() {
-    game = new Game(500, 350);
+    game = new Game(500, 400);
     game.start(game);
 });
 
@@ -12,14 +12,16 @@ class Game extends GameBase {
 
     start() {
         this._start(this);
-
-        let playerControls = new FourDirectionalPlayerControls("w","d","s","a");
-        let player = new Player("Player 1", 10, 10, 20, 20, playerControls);
+        
+        let player = new Player("Player 1", 10, 10, 20, 20, new FourDirectionalPlayerControls("w","d","s","a"));
         player.draw = function(canvas) {
             canvas.fillStyle = "#00A";
             canvas.fillRect(this.x, this.y, this.width, this.height);
         }
         this.entities.push(player);
+
+        let map = new Map(1500, 1500);
+        this.entities = this.entities.concat(map.entities);
     }
 
     update() {
@@ -30,5 +32,26 @@ class Game extends GameBase {
     draw() {
         this._draw();
 
+    }
+}
+
+class Map {
+    constructor() {
+        this.entities = [];
+        this.entities = this.entities.concat(this.createWalls());
+    }
+
+    createWalls() {
+        let wallEntities = [];
+        let wall1 = new Entity("wall 1", 0, 300, 1200, 4);
+        wall1.draw = function(canvas) {
+            canvas.beginPath();
+            canvas.moveTo(this.x,this.y);
+            canvas.lineTo(this.x + this.width,this.y);
+            canvas.stroke();
+        }
+        wallEntities.push(wall1);
+
+        return wallEntities;
     }
 }

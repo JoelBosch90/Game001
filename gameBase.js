@@ -2,6 +2,7 @@ class GameBase {
     constructor(canvas_width, canvas_height) {
         this.canvas_width = canvas_width;
         this.canvas_height = canvas_height;
+        this.playingField = new PlayingField(this.canvas_width, this.canvas_height);
 
         this.entities = [];
         let canvasElement = $("<canvas width='" + this.canvas_width + "' height='" + this.canvas_height + "'></canvas>");
@@ -17,7 +18,7 @@ class GameBase {
         this.controlInput = new ControlInput();
 
         let FPS = 60;
-        setInterval(function() {
+        this.interval = setInterval(function() {
             game.update();
             game.draw();
         }, 1000/FPS);
@@ -43,8 +44,10 @@ class GameBase {
         
         var arrayLength = this.entities.length;
         for (var i = 0; i < arrayLength; i++) {
-            this.entities[i].draw(this.canvas);
-            if(this.entities[i].controls !== null) {
+            if(this.entities[i].draw != null) {
+                this.entities[i].draw(this.canvas);
+            }
+            if(this.entities[i].controls != null) {
                 this.entities[i].controls.move(this.controlInput, this.entities[i]);
             }
         }
@@ -112,5 +115,12 @@ class Player extends Entity {
         super(name, x, y, width, height);
         
         this.controls = controls;
+    }
+}
+
+class PlayingField {
+    constructor(width, height) {
+        this.height = height;
+        this.width = width;
     }
 }
