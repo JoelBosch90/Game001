@@ -14,6 +14,8 @@ class GameBase {
     }
 
     _start(game) {
+        this.controlInput = new ControlInput();
+
         let FPS = 60;
         setInterval(function() {
             game.update();
@@ -39,13 +41,12 @@ class GameBase {
         this.canvas.fillStyle = "#FFF";
         this.canvas.fillRect(0, 0, this.canvas_width, this.canvas_height);
         
-        //console.log(this.entities);
-        // this.entities.forEach(function (e) {
-        //     e.draw(this.canvas);
-        // });
         var arrayLength = this.entities.length;
         for (var i = 0; i < arrayLength; i++) {
             this.entities[i].draw(this.canvas);
+            if(this.entities[i].controls !== null) {
+                this.entities[i].controls.move(this.controlInput, this.entities[i]);
+            }
         }
     }
 }
@@ -62,20 +63,21 @@ class Entity {
 
 class ControlInput {
     constructor() {
+        let controlInput = this;
         /* Tracks when certain keys are pressed. */
         document.onkeydown = function (e) {
-            this[e.key] = false;
+            controlInput[e.key] = true;
         }
 
         /* Tracks when certain keys are let go of. */
         document.onkeyup = function (e) {
-            this[e.key] = false;
-        }
+            controlInput[e.key] = false;
+        }  
     }
-
+    
     IsKeyPressed(key) {
-        if(this[e.key] !== null) {
-            return this[e.key];
+        if(this[key] !== null) {
+            return this[key];
         }
     }
 }
@@ -89,26 +91,24 @@ class FourDirectionalPlayerControls {
         this.speed = speed;
     }
 
-    Move(player) {
-        switch (key) {
-            case this.upKey:
-                player.x -= 2;
-                break;
-            case this.leftKey:
-                player.y -= 2;
-                break;
-            case this.downKey:
-                player.x += 2;
-                break;
-            case this.rightKey:
-                player.x += 2;
-                break;
-        } 
+    move(controlInput, player) {
+        if(controlInput.IsKeyPressed(this.upKey)) {
+            player.y -= 2;
+        }
+        if(controlInput.IsKeyPressed(this.leftKey)){
+            player.x += 2;
+        }
+        if(controlInput.IsKeyPressed(this.downKey)){
+            player.y += 2;
+        }
+        if(controlInput.IsKeyPressed(this.rightKey)){
+            player.x -= 2;
+        }
     }
 }
 
 class Player extends Entity {
-    constructor(name, x, y, width, height, shape, controls) {
+    constructor(name, x, y, width, height, controls) {
         super(name, x, y, width, height);
         
         this.controls = controls;
